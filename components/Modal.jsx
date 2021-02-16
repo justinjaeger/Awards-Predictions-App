@@ -3,7 +3,7 @@ import FollowerList from 'components/dashboardComponents/FollowerList';
 
 function Blank(props) { 
 
-  const { array, title, setModal } = props;
+  const { title, setModal, profileUsername } = props;
 
   /*** Detect clicks outside the component ***/
   const ref = useRef(null);
@@ -26,10 +26,11 @@ function Blank(props) {
     <div id="modal-background">
       <div id="follower-container" ref={ref}>
       <button className="x-button x-button-modal" onClick={() => setModal(false)} >X</button>
-        <div id="follower-title">{title}: </div>
+        {title === 'follower' && <div id="follower-title">Followers:</div>}
+        {title === 'following' && <div id="follower-title">Following:</div>}
         <FollowerList 
-          array={array}
-          forKey={title}
+          title={title}
+          profileUsername={profileUsername}
         />
       </div>
     </div>

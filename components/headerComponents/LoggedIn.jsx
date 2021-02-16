@@ -17,7 +17,7 @@ function LoggedIn(props) {
     <>
       <div id="header-message">Welcome, {username}</div>
 
-      <div><a href={`${route}/${username}`} className="header-button" >My Profile</a></div>
+      <div><a href={`http://${route}/${username}`} className="header-button" >My Profile</a></div>
       
       <button onClick={logout} className="header-button" >Log Out</button>
     </>

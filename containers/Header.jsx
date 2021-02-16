@@ -31,6 +31,7 @@ export default function App(props) {
     setLoginRoute('/blank');
     setLoginMessage('');
     setLoginError('');
+    window.location.reload();
   };
 
   // LOG OUT
@@ -40,6 +41,7 @@ export default function App(props) {
       if (res.data.error) return setError(res.data.error);
       setLoggedIn(false);
       setUsername('');
+      window.location.reload();
     })
     .catch(err => {
       console.log('err, could not log out', err.response);
