@@ -9,10 +9,10 @@ const mysql = require('serverless-mysql')
 
 const db = mysql({
   config: {
-    host: process.env.MYSQL_HOST,
-    database: process.env.MYSQL_DATABASE,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD
+    host: process.env.TEST_HOST,
+    database: process.env.TEST_DATABASE,
+    user: process.env.TEST_USER,
+    password: process.env.TEST_PASSWORD
   }
 })
 
@@ -45,15 +45,16 @@ async function migrate() {
     CREATE TABLE IF NOT EXISTS tokens (
       access_token VARCHAR(250) NOT NULL PRIMARY KEY,
       user_id INT NOT NULL,
+      username VARCHAR(20),
     )
 
-    CREATE TABLE IF NOT EXISTS followers (
-      username VARCHAR(20) NOT NULL,
-      follower VARCHAR(20) NOT NULL,
-      dateCreated DATETIME,
-      PRIMARY KEY (username, follower),
-      UNIQUE INDEX (username, follower)
-    )
+    CREATE TABLE IF NOT EXISTS followships (
+      follower_id INT NOT NULL,
+      followee_id INT NOT NULL,
+      dateCreated DATE,
+      PRIMARY KEY (follower_id, followee_id),
+      UNIQUE INDEX (follower_id, followee_id)
+    );
     `)
     console.log('migration ran successfully')
   } catch (e) {

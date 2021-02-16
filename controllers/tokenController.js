@@ -3,11 +3,11 @@ import db from 'lib/db';
 
 const tokenController = {};
 let result, query;
-const tokenExpireTime = '30s';
+const tokenExpireTime = '10m';
 
 /*************************************/
 
-tokenController.verifyToken = async (req, res, next) => {
+tokenController.verifyToken = async (req, res) => {
 
   console.log('inside verifyToken');
 
@@ -27,20 +27,20 @@ tokenController.verifyToken = async (req, res, next) => {
     console.log('TOKEN EXPIRED');
 
     /* DELETE ACCESS TOKEN FROM DB */
-    await tokenController.deleteAccessToken(req, res, next);
+    await tokenController.deleteAccessToken(req, res);
     if (res.finished) return;
 
     console.log('refreshing token... ')
 
     /* and CREATE NEW ACCESS TOKEN */
-    await tokenController.createAccessToken(req, res, next);
+    await tokenController.createAccessToken(req, res);
     if (res.finished) return;
   };
 };
 
 /*************************************/
 
-tokenController.createAccessToken = async (req, res, next) => {
+tokenController.createAccessToken = async (req, res) => {
 
   console.log('inside createAccessToken')
 
@@ -56,20 +56,20 @@ tokenController.createAccessToken = async (req, res, next) => {
   const access_token = jwt.sign(accessPayload,  process.env.ACCESS_TOKEN_SECRET, accessOptions);
   
   /* SAVE TOKEN IN DB */
-  query = `
+  result = await db.query(`
     INSERT INTO tokens(access_token, user_id)
-    VALUES("${access_token}", ${user_id}) `;
-  result = await db.query(query);
+    VALUES("${access_token}", ${user_id}) 
+  `);
   res.handleErrors(result);
   res.handleEmptyResult(result);
 
   /* UPDATE LAST LOGGED IN */
   const datetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  query = `
+  result = await db.query(`
     UPDATE users
     SET lastLoggedIn = '${datetime}'
-    WHERE user_id = ${user_id} `;
-  result = await db.query(query);
+    WHERE user_id = ${user_id} 
+  `);
   res.handleErrors(result);
   res.handleEmptyResult(result);
 
@@ -81,17 +81,17 @@ tokenController.createAccessToken = async (req, res, next) => {
 
 /*************************************/
 
-tokenController.deleteAccessToken = async (req, res, next) => {
+tokenController.deleteAccessToken = async (req, res) => {
 
   console.log('inside deleteAccessToken')
 
   const { access_token, user_id } = res.locals;
 
   /* Delete the access token in db */
-  query = `
+  result = await db.query(`
     DELETE FROM tokens
-    WHERE access_token="${access_token}" `;
-  result = await db.query(query);
+    WHERE access_token="${access_token}" 
+  `);
   res.handleErrors(result);
 
   console.log('token deleted from db')
@@ -101,10 +101,10 @@ tokenController.deleteAccessToken = async (req, res, next) => {
   if (result.affectedRows === 0) { 
     console.log('deleting all user tokens')
     /* Delete all tokens associated with user */
-    query = `
-    DELETE FROM tokens
-    WHERE user_id=${user_id}`;
-    result = await db.query(query);
+    result = await db.query(`
+      DELETE FROM tokens
+      WHERE user_id=${user_id}`
+    );
     res.handleErrors(result);
 
     /* Delete cookie from browser */
@@ -118,7 +118,7 @@ tokenController.deleteAccessToken = async (req, res, next) => {
 
 /*************************************/
 
-tokenController.getTokenData = async (req, res, next) => {
+tokenController.getTokenData = async (req, res) => {
 
   console.log('inside getTokenData');
 

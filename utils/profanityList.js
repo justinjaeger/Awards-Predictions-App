@@ -1,4 +1,5 @@
 module.exports = [
+  "testuser",
   "theoscarexpert",
   "brotherbro",
   "oscarexpert",

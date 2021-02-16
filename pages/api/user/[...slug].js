@@ -25,7 +25,7 @@ const handler = async (req, res) => {
     };
 
     /* All the below functions modify the data object.
-       They all fetch data using the user_id */
+       They all fetch data using the user_id in res.locals */
     switch (action) {
       case 'home':
         /* Fetch the username */
@@ -36,7 +36,16 @@ const handler = async (req, res) => {
         data.loggedIn = true;
         break;
 
-      default: /* Fetch something else */
+      case 'dashboard':
+        /* Fetch the username */
+        await userController.getUsername(req, res);
+        if (res.finished) return;
+
+        data.username = res.locals.username;
+        data.loggedIn = true;
+        break;
+
+      default: 
     };
 
     /* pass cookieArray to the data/output object 

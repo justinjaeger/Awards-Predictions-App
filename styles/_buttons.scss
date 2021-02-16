@@ -1,0 +1,96 @@
+@import 'styles/variables';
+
+@mixin circleButton() {
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  line-height: 0px;
+}
+
+#follower-button {
+  display: flex;
+  background: $off-white;
+  color: $off-black;
+  font-size: 20px;
+  font-family: $oswald;
+  border-radius: 3px;
+  padding: 0 10px 0 10px;
+  margin: 10px 0 10px 0;
+  &:hover {
+    background: $secondary;
+    color: $off-black;
+  };
+}
+
+.submit-button {
+  display: flex;
+  background: $off-white;
+  color: $off-black;
+  font-size: 20px;
+  font-family: $oswald;
+  border-radius: 3px;
+  padding: 0 10px 0 10px;
+  margin: 10px 0 10px 0;
+  &:hover {
+    background: $secondary;
+    color: $off-black;
+  };
+  &:disabled {
+    background: $gray;
+    color: $off-white;
+    cursor: auto;
+  };
+}
+
+.forgot-password-button {
+  @include phone {
+    margin: 18px 0 0 0;
+  }
+  margin: 10px 0 0 0;
+  display: flex;
+  align-self: flex-start;
+  font-size: 16px;
+  color: $off-white;
+  &:hover {
+    color:$secondary;
+  };
+}
+
+.x-button {
+  position: absolute;
+  color: $off-black;
+  font-size: 20px;
+  font-weight: 600;
+  top: 55px;
+  right: 10px;
+}
+.x-button-login {
+  @include circleButton();
+  @include phone {
+    height: 30px;
+    width: 30px;
+    font-size: 26px;
+  }
+  &:hover {
+    background: $secondary;
+    color: $off-black;
+  } 
+  background: $off-white;
+  border: 1px solid $off-black;
+}
+
+.x-button-modal {
+  top: 0;
+  right: 10px;
+}
+
+.click-here-button {
+  position: relative;
+  font-size: 16px;
+  background: $off-black;
+  text-decoration: underline;
+  color: $off-white;
+  &:hover {
+    color: $secondary;
+  }
+}

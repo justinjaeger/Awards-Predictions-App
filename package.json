@@ -5,22 +5,22 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest --runInBand"
   },
   "dependencies": {
+    "@next/env": "^10.0.6",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "cookie": "^0.4.1",
-    "cookies": "^0.8.0",
     "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "framer-motion": "^3.3.0",
     "http-proxy": "^1.18.1",
-    "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
+    "msw": "^0.26.2",
     "mysql": "^2.18.1",
     "next": "^10.0.0",
-    "next-connect": "^0.9.1",
     "next-cookie": "^2.6.0",
     "next-cookies": "^2.0.3",
     "nodemailer": "^6.4.17",
@@ -30,5 +30,12 @@
     "scss": "^0.2.4",
     "serverless-mysql": "^1.5.4",
     "sql-template-strings": "^2.2.2"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "babel-jest": "^26.6.3",
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "@testing-library/react": "^11.2.5"
   }
 }

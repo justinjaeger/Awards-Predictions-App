@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cookies from 'next-cookies';
-import Header from 'containers/Header';
 import parseCookies from 'utils/parseCookies';
+import { useRouter } from 'next/router';
 
-export default function Home(props) { 
+import Header from 'containers/Header';
+import Dashboard from 'containers/Dashboard';
+
+/**
+ * /username123
+ */
+
+function UserDashboard(props) { 
+
+  // Gets the url slug
+  const { username: profileUsername } = useRouter().query;
+
+  console.log('props', props)
 
   return (
     <>
@@ -19,10 +31,19 @@ export default function Home(props) {
         notification={props.notification}
         notificationBox={props.notificationBox}
       />
+
+      <Dashboard 
+        loggedIn={props.loggedIn}
+        username={props.username}
+        user_id={props.user_id}
+        profileUsername={profileUsername}
+      />
     </>
   );
-};
+}
 
+export default UserDashboard;
+ 
 /**
  * Fetch all SSR (user specific) props
  * Begin by declaring all props' default values
@@ -33,7 +54,6 @@ export default function Home(props) {
 export async function getServerSideProps(context) {
 
   /* Default values for all props */
-  
   const props = { 
     loggedIn: false,
     loginDropdown: false,
@@ -42,6 +62,7 @@ export async function getServerSideProps(context) {
     loginError: '',
     username: '',
     email: '',
+    user_id: false,
     notification: false,
     notificationBox: false,
   };
@@ -80,17 +101,12 @@ export async function getServerSideProps(context) {
    * If access token exists, verify it. 
    * If verified, populate the page with appropriate user data
    */
+
   if (c.access_token) { // cookie exists when you are logged in
 
     const payload = { access_token: c.access_token };
-    /**
-     * Request to verify token
-     * The route here is selected based on what is going to load from this file (index.jsx)
-     * We need the username to say "Hi, Username" for home page, and this loads the home page
-     * For other prediction pages which will check the cookie, we'll put a slug there to tell it to send back more data
-     * - so long as sticking with SSR, can also just do static loading skeleton w/ client side fetching
-     */
-    await axios.post(`${process.env.DEV_ROUTE}/api/user/home`, payload)
+    /* Request to verify token -- Route is selected based on what data we need on the dashbaord */
+    await axios.post(`${process.env.DEV_ROUTE}/api/user/dashboard`, payload)
       .then(res => {
         /* If token is verified, set props accordingly */
         if (res.data.loggedIn) {
@@ -104,6 +120,11 @@ export async function getServerSideProps(context) {
         console.log('something went wrong while verifying access token', err);
       })
   };
+
+  /**
+   * Here, we COULD load the data on the user's followers and followees...
+   * but we're going to leave that to render on the client side and do a skeleton instead
+   */
 
   /* Return the final props object */
   return { props };

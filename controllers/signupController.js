@@ -86,10 +86,10 @@ signupController.createUser = async (req, res) => {
   const { email, username, hashedPassword } = res.locals;
 
   /* Create new user in database */
-  query = `
+  result = await db.query(`
     INSERT INTO users(email, username, password)
-    VALUES("${email}", "${username}", "${hashedPassword}") `;
-  result = await db.query(query); 
+    VALUES("${email}", "${username}", "${hashedPassword}") 
+  `); 
   if (result.error) {
     /* Handle duplicate entry errors with an error message */
     if (result.error.code === 'ER_DUP_ENTRY') {

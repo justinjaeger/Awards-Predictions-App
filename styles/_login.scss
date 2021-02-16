@@ -1,12 +1,5 @@
 @import 'styles/variables';
 
-@mixin circleButton() {
-  border-radius: 50%;
-  height: 24px;
-  width: 24px;
-  line-height: 0px;
-}
-
 #login-container {
   @include phone {
     width: 100%;
@@ -70,71 +63,4 @@
   display: block;
   float: left;
   background: $off-black;
-}
-
-// BUTTONS
-.submit-button {
-  display: flex;
-  background: $off-white;
-  color: $off-black;
-  font-size: 20px;
-  font-family: $oswald;
-  border-radius: 3px;
-  padding: 0 10px 0 10px;
-  margin: 10px 0 10px 0;
-  &:hover {
-    background: $secondary;
-    color: $off-black;
-  };
-  &:disabled {
-    background: $gray;
-    color: $off-white;
-    cursor: auto;
-  };
-}
-
-.forgot-password-button {
-  @include phone {
-    margin: 18px 0 0 0;
-  }
-  margin: 10px 0 0 0;
-  display: flex;
-  align-self: flex-start;
-  font-size: 16px;
-  color: $off-white;
-  &:hover {
-    color:$secondary;
-  };
-}
-
-.x-button {
-  @include circleButton();
-  @include phone {
-    height: 30px;
-    width: 30px;
-    font-size: 26px;
-  }
-  position: absolute;
-  background: $off-white;
-  color: $off-black;
-  font-size: 20px;
-  font-weight: 600;
-  top: 55px;
-  right: 10px;
-  border: 1px solid $off-black;
-  &:hover {
-    background: $secondary;
-    color: $off-black;
-  } 
-}
-
-.click-here-button {
-  position: relative;
-  font-size: 16px;
-  background: $off-black;
-  text-decoration: underline;
-  color: $off-white;
-  &:hover {
-    color: $secondary;
-  }
 }

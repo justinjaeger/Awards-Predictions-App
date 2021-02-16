@@ -2,11 +2,11 @@ import db from 'lib/db';
 const bcrypt = require('bcrypt');
 
 const loginController = {};
-let query, result;
+let result;
 
 /*************************************/
 
-loginController.verifyPassword = async (req, res, next) => {
+loginController.verifyPassword = async (req, res) => {
 
   console.log('verifyPassword')
 
@@ -22,18 +22,18 @@ loginController.verifyPassword = async (req, res, next) => {
 
 /*************************************/
 
-loginController.returnUserData = async (req, res, next) => {
+loginController.returnUserData = async (req, res) => {
 
   console.log('returnUserData')
 
   const { entryType, emailOrUsername } = res.locals;
 
   /* Fetch email or username based on entry */
-  query = `
+  result = await db.query(`
     SELECT *
     FROM users
-    WHERE ${entryType}="${emailOrUsername}" `;
-  result = await db.query(query);
+    WHERE ${entryType}="${emailOrUsername}" 
+  `);
   res.handleErrors(result);
   res.handleEmptyResult(result, { error: `Credentials do not match` });
 
@@ -57,18 +57,18 @@ loginController.returnUserData = async (req, res, next) => {
  * - if it returns a user_id, we proceed to next middleware
  */
 
-loginController.ifEmailNoExistDontSend = async (req, res, next) => {
+loginController.ifEmailNoExistDontSend = async (req, res) => {
 
   console.log('ifEmailNoExistDontSend')
   
   const { email } = res.locals;
 
   /* Fetch user_id. If no result, user doesn't exist */
-  query = `
+  result = await db.query(`
     SELECT user_id 
     FROM users
-    WHERE email="${email}" `;
-  result = await db.query(query);
+    WHERE email="${email}" 
+  `);
   res.handleErrors(result);
   /* If user no exist, We should send the message anyway 
   in case a hacker is fishing for valid emails */
@@ -80,25 +80,25 @@ loginController.ifEmailNoExistDontSend = async (req, res, next) => {
 
 /*************************************/
 
-loginController.updatePassword = async (req, res, next) => {
+loginController.updatePassword = async (req, res) => {
 
   console.log('updatePassword')
 
   const { hashedPassword, user_id } = res.locals;
 
   /* Update the password in db */
-  query = `
+  result = await db.query(`
     UPDATE users
     SET password="${hashedPassword}"
-    WHERE user_id=${user_id} `;
-  result = await db.query(query);
+    WHERE user_id=${user_id} 
+  `);
   res.handleErrors(result);
   res.handleEmptyResult(result);
 };
 
 /*************************************/
 
-loginController.verifyEmailAuthenticated = (req, res, next) => {
+loginController.verifyEmailAuthenticated = (req, res) => {
 
   console.log('verifyEmailAuthenticated')
 
