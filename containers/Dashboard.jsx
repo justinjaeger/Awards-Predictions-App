@@ -7,6 +7,8 @@ function Dashboard(props) {
   const { loggedIn, profileUsername, username } = props;
   const [followerArray, setFollowerArray] = useState([{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},{username: 'asdf'},]);
   const [followingArray, setFollowingArray] = useState([]);
+  const [numFollowers, setNumFollowers] = useState('XXXX');
+  const [numFollowing, setNumFollowing] = useState('XXXX');
   const [modal, setModal] = useState(false);
 
   /* Determine if page is YOUR profile or someone else's */
@@ -42,6 +44,16 @@ function Dashboard(props) {
       if (err) console.log('something went wrong fetching followings', err);
     })
 
+    /* Fetch the number of followers and following */
+    await axios.post('/api/followers/getNumFollowers', { profileUsername })
+      .then(res => {
+        setNumFollowers(res.data.numFollowers);
+        setNumFollowing(res.data.numFollowing);
+      })
+      .catch(err => {
+        if (err) console.log('something went wrong fetching followers', err);
+      })
+
   }, []);
 
   /* FOLLOW USER */
@@ -50,6 +62,8 @@ function Dashboard(props) {
       .then(res => {
         /* update the followers array */
         setFollowerArray(res.data.followers);
+        /* also update the following number */
+        setNumFollowers(numFollowers+1);
       })
       .catch(err => {
         if (err) console.log('something went wrong fetching followers', err);
@@ -63,6 +77,8 @@ function Dashboard(props) {
       .then(res => {
         /* update the followers array */
         setFollowerArray(res.data.followers);
+        /* also update the following number */
+        setNumFollowers(numFollowers-1);
       })
       .catch(err => {
         if (err) console.log('something went wrong fetching followers', err);
@@ -72,8 +88,8 @@ function Dashboard(props) {
   /* Load the skeleton until the data has been fetched */
   return (
     <>
-      <button onClick={() => setModal('follower')} id="follower-button">Followers: </button>
-      <button onClick={() => setModal('following')} id="follower-button">Following: </button>
+      <button onClick={() => setModal('follower')} id="follower-button">{numFollowers} followers</button>
+      <button onClick={() => setModal('following')} id="follower-button">{numFollowing} following</button>
       
       { (modal==='follower') && 
         <Modal 

@@ -1,6 +1,7 @@
 import wrapper from 'utils/wrapper';
 import tokenController from 'controllers/tokenController';
 import userController from 'controllers/userController';
+import followerController from 'controllers/followerController';
 
 /**
  * Essentially gets called whenever we see that we have an access token.
@@ -40,8 +41,16 @@ const handler = async (req, res) => {
         /* Fetch the username */
         await userController.getUsername(req, res);
         if (res.finished) return;
+        /* Fetch number of followers */
+        await followerController.getNumFollowers(req, res);
+        if (res.finished) return;
+        /* Fetch number of following */
+        await followerController.getNumFollowing(req, res);
+        if (res.finished) return;
 
         data.username = res.locals.username;
+        data.followerNumber = res.locals.followerNumber;
+        data.followingNumber = res.locals.followingNumber
         data.loggedIn = true;
         break;
 

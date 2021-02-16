@@ -85,4 +85,40 @@ followerController.unfollowUser = async (req, res) => {
 
 /*************************************/
 
+followerController.getNumFollowers = async (req, res) => {
+
+  console.log('getNumFollowers')
+
+  const { profileUsername } = res.locals;
+
+  /* Fetch num of followers - cur page is followee */
+  result = await db.query(`
+    SELECT COUNT(*) AS sum FROM followers WHERE username="${profileUsername}"
+  `);
+  res.handleErrors(result);
+
+  res.locals.numFollowers = result[0].sum;
+};
+
+/*************************************/
+
+followerController.getNumFollowing = async (req, res) => {
+
+  console.log('getNumFollowing')
+
+  const { profileUsername } = res.locals;
+
+  /* Fetch who user is following - user is the follower */
+  result = await db.query(`
+    SELECT COUNT(*) AS sum FROM followers WHERE follower="${profileUsername}"
+  `);
+  res.handleErrors(result);
+
+  console.log('RESULT:: ', result)
+
+  res.locals.numFollowing = result[0].sum;
+};
+
+/*************************************/
+
 export default followerController;

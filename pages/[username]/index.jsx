@@ -105,7 +105,7 @@ export async function getServerSideProps(context) {
   if (c.access_token) { // cookie exists when you are logged in
 
     const payload = { access_token: c.access_token };
-    /* Request to verify token -- Route is selected based on what data we need on the dashbaord */
+    /* Request to verify token and get data no the user */
     await axios.post(`${process.env.DEV_ROUTE}/api/user/dashboard`, payload)
       .then(res => {
         /* If token is verified, set props accordingly */
@@ -113,18 +113,13 @@ export async function getServerSideProps(context) {
           props.loggedIn = true;
           props.username = res.data.username;
         };  
-        /* sets cookies on client (HAVE to do this for getServerSideProps) */
+        /* sets cookies on client (HAVE to do this inside getServerSideProps) */
         parseCookies(res.data.cookieArray, context);
       })
       .catch(err => {
         console.log('something went wrong while verifying access token', err);
       })
   };
-
-  /**
-   * Here, we COULD load the data on the user's followers and followees...
-   * but we're going to leave that to render on the client side and do a skeleton instead
-   */
 
   /* Return the final props object */
   return { props };
