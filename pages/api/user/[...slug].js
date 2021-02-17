@@ -38,20 +38,13 @@ const handler = async (req, res) => {
         break;
 
       case 'dashboard':
-        /* Fetch the username */
-        await userController.getUsername(req, res);
-        if (res.finished) return;
-        /* Fetch number of followers */
-        await followerController.getNumFollowers(req, res);
-        if (res.finished) return;
-        /* Fetch number of following */
-        await followerController.getNumFollowing(req, res);
+        /* Fetch the username and profile image */
+        await userController.dashboard(req, res);
         if (res.finished) return;
 
         data.username = res.locals.username;
-        data.followerNumber = res.locals.followerNumber;
-        data.followingNumber = res.locals.followingNumber
         data.loggedIn = true;
+        data.profileImage = res.locals.profileImage;
         break;
 
       default: 

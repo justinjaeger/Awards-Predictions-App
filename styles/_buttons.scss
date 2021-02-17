@@ -7,21 +7,6 @@
   line-height: 0px;
 }
 
-#follower-button {
-  display: flex;
-  background: $off-white;
-  color: $off-black;
-  font-size: 20px;
-  font-family: $oswald;
-  border-radius: 3px;
-  padding: 0 10px 0 10px;
-  margin: 10px 0 10px 0;
-  &:hover {
-    background: $secondary;
-    color: $off-black;
-  };
-}
-
 .submit-button {
   display: flex;
   background: $off-white;

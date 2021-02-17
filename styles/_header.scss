@@ -14,7 +14,7 @@
 
 /* includes buttons and text */
 @mixin headerContent() {
-  margin: 0 15px 0 15px;
+  margin: 0;
   font-family: $oswald;
   font-size: 24px;
   color: $off-white;
@@ -31,6 +31,12 @@
 #header-message {
   @include centerText();
   @include headerContent();
+  margin: 15px;
+}
+
+.header-profile-pic {
+  margin-top: 10px;
+  margin-right: 10px;
 }
 
 .header-button {

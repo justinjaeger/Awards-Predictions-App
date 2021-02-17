@@ -1,0 +1,30 @@
+@import 'styles/variables';
+
+$xsm: 30px;
+$sm: 50px;
+$lg: 200px;
+
+@mixin circle() {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-image-xsm {
+  @include circle();
+  width: $xsm;
+  height: $xsm;
+}
+.profile-image-sm {
+  @include circle();
+  width: $sm;
+  height: $sm;
+}
+.profile-image-lg {
+  @include circle();
+  width: $lg;
+  height: $lg;
+}
+
+.movie-thumbnail {
+
+}

@@ -11,7 +11,8 @@ function Header(props) {
     setRoute, 
     username, 
     setLoginDropdown,
-    setMessage
+    setMessage,
+    profileImage
   } = props;
 
   return (
@@ -29,6 +30,7 @@ function Header(props) {
         <LoggedIn 
           username={username}
           logout={logout}
+          profileImage={profileImage}
         />
       }
       

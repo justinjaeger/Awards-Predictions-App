@@ -1,6 +1,11 @@
 @import 'styles/variables';
 
-#modal-background {
+#dashboard-content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#modal-background { 
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
@@ -19,12 +24,31 @@
   transform: translateX(-50%);
   top: 100px;
   width: 80%;
-  max-width: 600px;
+  max-width: 400px;
   height: 400px;
   padding: 10px;
   border-radius: 10px;
   background-color: $off-white;
   overflow: scroll;
+}
+
+#follower-button {
+  display: block;
+  background: $off-white;
+  color: $off-black;
+  font-size: 20px;
+  font-family: $oswald;
+  border-radius: 3px;
+  padding: 0 10px 0 10px;
+  margin: 0px 0 10px 0;
+  &:hover {
+    background: $secondary;
+    color: $off-black;
+  };
+}
+
+#dashboard-follower-buttons {
+  display: flex;
 }
 
 #follower-title {
@@ -37,10 +61,22 @@
 
 #follower-unit {
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.follower-unit-username {
+  margin-left: 10px;
 }
 
 #profile-name {
+  // display: flex;
   font-family: $oswald;
   margin: 10px;
   font-size: 26px;
+}
+
+.dashboard-profile-image {
+  display: flex;
+  margin: 10px;
 }

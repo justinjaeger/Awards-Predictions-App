@@ -30,12 +30,14 @@ function UserDashboard(props) {
         email={props.email}
         notification={props.notification}
         notificationBox={props.notificationBox}
+        profileImage={props.profileImage}
       />
 
       <Dashboard 
         loggedIn={props.loggedIn}
         username={props.username}
         user_id={props.user_id}
+        profileImage={props.profileImage}
         profileUsername={profileUsername}
       />
     </>
@@ -65,6 +67,7 @@ export async function getServerSideProps(context) {
     user_id: false,
     notification: false,
     notificationBox: false,
+    profileImage: null,
   };
 
   /* Handle cookies */
@@ -112,6 +115,7 @@ export async function getServerSideProps(context) {
         if (res.data.loggedIn) {
           props.loggedIn = true;
           props.username = res.data.username;
+          props.profileImage = res.data.profileImage;
         };  
         /* sets cookies on client (HAVE to do this inside getServerSideProps) */
         parseCookies(res.data.cookieArray, context);

@@ -60,7 +60,7 @@ function FollowerList(props) {
 
   return (
     <>
-      {skeleton && <div id="follower-list">SKELETON</div>}
+      {skeleton && <div id="follower-list"></div>}
       {!skeleton && <div id="follower-list">{list}</div>}
     </>
   );
