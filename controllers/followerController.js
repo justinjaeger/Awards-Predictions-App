@@ -114,8 +114,6 @@ followerController.getNumFollowing = async (req, res) => {
   `);
   res.handleErrors(result);
 
-  console.log('RESULT:: ', result)
-
   res.locals.numFollowing = result[0].sum;
 };
 

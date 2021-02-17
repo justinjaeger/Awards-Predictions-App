@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Modal from 'components/Modal'
+import Modal from 'components/dashboardComponents/Modal'
 
 function Dashboard(props) { 
 
-  const { loggedIn, profileUsername, username } = props;
+  const { loggedIn, profileUsername, username, profileImage } = props;
   const [numFollowers, setNumFollowers] = useState('');
   const [numFollowing, setNumFollowing] = useState('');
   const [followingUser, setFollowingUser] = useState(false);
   const [modal, setModal] = useState(false);
+  const [image, setImage] = useState('/PROFILE.png');
 
   /* Determine if page is YOUR profile or someone else's */
   const isMyProfile = (username === profileUsername) ? true : false;
@@ -25,14 +26,29 @@ function Dashboard(props) {
         if (err) console.log('something went wrong fetching followers', err);
       })
 
-    /* Determine if we are following them */
     if (loggedIn) {
+      /* Determine if we are following them */
       await axios.post('/api/followers/determineFollowing', { username, profileUsername })
         .then(res => {
           setFollowingUser(res.data.followingUser)
         })
         .catch(err => {
           if (err) console.log('something went wrong fetching followers', err);
+        })
+    };
+
+    /* Set profile image */
+    if (isMyProfile) {
+      /* Set profile image */
+      if (profileImage !== null) setImage(profileImage);
+    } else {
+      /* Fetch the profile image from db */
+      await axios.post('/api/user/getProfileImage', { profileUsername })
+        .then(res => {
+          if (res.data.profileImage) setImage(res.data.profileImage);
+        })
+        .catch(err => {
+          if (err) console.log('something went wrong with getProfileImage', err);
         })
     };
 
@@ -67,28 +83,31 @@ function Dashboard(props) {
 
   /* Load the skeleton until the data has been fetched */
   return (
-    <>
+    <div id="dashboard-content">
 
-      { !isMyProfile &&
-        <div id="profile-name" >{profileUsername} 's profile</div>
-      }
+      <img src={image} alt="" className="profile-image-lg dashboard-profile-image" />
 
-      { isMyProfile &&
-        <div id="profile-name" >Welcome, {profileUsername}</div>
-      }
+      <div id="dashboard info">
+        { !isMyProfile &&
+          <div id="profile-name" >{profileUsername}</div>
+        }
 
-      { !isMyProfile && loggedIn && [
-        followingUser && 
-          <button id="follower-button" onClick={() => unfollowUser(profileUsername, username)}>Unfollow</button>,
-        !followingUser && 
-          <button id="follower-button" onClick={() => followUser(profileUsername, username)}>Follow</button>
-      ]}
-      {/* { !isMyProfile && loggedIn && !followingUser &&
-        <button id="follower-button" onClick={() => followUser(profileUsername, username)}>Follow</button>
-      } */}
+        { isMyProfile &&
+          <div id="profile-name" >Welcome, {profileUsername}</div>
+        }
 
-      <button onClick={() => setModal('follower')} id="follower-button">{numFollowers} followers</button>
-      <button onClick={() => setModal('following')} id="follower-button">{numFollowing} following</button>
+        { !isMyProfile && loggedIn && [
+          followingUser && 
+            <button id="follow-button" onClick={() => unfollowUser(profileUsername, username)}>Unfollow</button>,
+          !followingUser && 
+            <button id="follow-button" onClick={() => followUser(profileUsername, username)}>Follow</button>
+        ]}
+        
+        <div id="dashboard-follower-buttons">
+          <button onClick={() => setModal('follower')} id="follower-button">{numFollowers} followers</button>
+          <button onClick={() => setModal('following')} id="follower-button">{numFollowing} following</button>
+        </div>
+      </div>
       
       { modal && 
         <Modal 
@@ -97,7 +116,8 @@ function Dashboard(props) {
           profileUsername={profileUsername}
         />
       }
-    </>
+
+    </div>
   );
 }
 

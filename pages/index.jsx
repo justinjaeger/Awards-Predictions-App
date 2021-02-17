@@ -18,6 +18,7 @@ export default function Home(props) {
         email={props.email}
         notification={props.notification}
         notificationBox={props.notificationBox}
+        profileImage={props.profileImage}
       />
     </>
   );
@@ -44,6 +45,7 @@ export async function getServerSideProps(context) {
     email: '',
     notification: false,
     notificationBox: false,
+    profileImage: null,
   };
 
   /* Handle cookies */
@@ -96,6 +98,7 @@ export async function getServerSideProps(context) {
         if (res.data.loggedIn) {
           props.loggedIn = true;
           props.username = res.data.username;
+          props.profileImage = res.data.profileImage;
         };  
         /* sets cookies on client (HAVE to do this for getServerSideProps) */
         parseCookies(res.data.cookieArray, context);

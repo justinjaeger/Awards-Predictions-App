@@ -9,6 +9,7 @@ export default function App(props) {
 
   const [username, setUsername] = useState(props.username);
   const [email, setEmail] = useState(props.email);
+  const [profileImage,] = useState(props.profileImage);
   const [loggedIn, setLoggedIn] = useState(props.loggedIn);
   const [loginDropdown, setLoginDropdown] = useState(props.loginDropdown);
   const [loginRoute, setLoginRoute] = useState(props.loginRoute);
@@ -88,6 +89,7 @@ export default function App(props) {
         username ={username}
         setLoginDropdown={setLoginDropdown}
         setMessage={setLoginMessage}
+        profileImage={profileImage}
       />
 
       { loginDropdown && 
