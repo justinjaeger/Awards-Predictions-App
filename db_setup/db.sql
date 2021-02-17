@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `user_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(100) UNIQUE NOT NULL,
   `username` VARCHAR(20) UNIQUE NOT NULL,
@@ -10,20 +10,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   `lastLoggedIn` DATETIME
 );
 
-CREATE TABLE IF NOT EXISTS `tokens` (
+CREATE TABLE `tokens` (
   `access_token` VARCHAR(250) PRIMARY KEY NOT NULL,
-  `user_id` INT NOT NULL,
-  `username` VARCHAR(20)
+  `user_id` INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `followers` (
+CREATE TABLE `followers` (
   `username` VARCHAR(20) NOT NULL,
   `follower` VARCHAR(20) NOT NULL,
   `dateCreated` DATETIME,
   PRIMARY KEY (`username`, `follower`)
 );
 
-CREATE TABLE IF NOT EXISTS `awardsShows` (
+CREATE TABLE `awardsShows` (
   `awardsShow_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) UNIQUE NOT NULL,
   `year` INT NOT NULL,
@@ -31,20 +30,20 @@ CREATE TABLE IF NOT EXISTS `awardsShows` (
   `dateCloses` DATETIME
 );
 
-CREATE TABLE IF NOT EXISTS `users_awardsShows` (
+CREATE TABLE `users_awardsShows` (
   `user_id` INT NOT NULL,
   `awardsShow_id` INT NOT NULL,
   `dateCreated` DATETIME,
   PRIMARY KEY (`user_id`, `awardsShow_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `awardsCategories` (
+CREATE TABLE `awardsCategories` (
   `awardsCategory_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `awardsShow_id` INT NOT NULL,
   `name` VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `awardsContenders` (
+CREATE TABLE `awardsContenders` (
   `awardsContender_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `awardsCategory_id` INT NOT NULL,
   `movie_id` INT NOT NULL,
@@ -53,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `awardsContenders` (
   `nomOrWin` BIT(1) DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS `movies` (
+CREATE TABLE `movies` (
   `movie_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(100) NOT NULL,
   `director` VARCHAR(100),
@@ -62,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `movies` (
   `poster` VARCHAR(10000)
 );
 
-CREATE TABLE IF NOT EXISTS `userPredictions` (
+CREATE TABLE `userPredictions` (
   `userPrediction_id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
   `awardsContender_id` INT NOT NULL,
