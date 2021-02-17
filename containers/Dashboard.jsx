@@ -89,7 +89,7 @@ function Dashboard(props) {
 
       <div id="dashboard info">
         { !isMyProfile &&
-          <div id="profile-name" >{profileUsername} 's profile</div>
+          <div id="profile-name" >{profileUsername}</div>
         }
 
         { isMyProfile &&
@@ -98,13 +98,11 @@ function Dashboard(props) {
 
         { !isMyProfile && loggedIn && [
           followingUser && 
-            <button id="follower-button" onClick={() => unfollowUser(profileUsername, username)}>Unfollow</button>,
+            <button id="follow-button" onClick={() => unfollowUser(profileUsername, username)}>Unfollow</button>,
           !followingUser && 
-            <button id="follower-button" onClick={() => followUser(profileUsername, username)}>Follow</button>
+            <button id="follow-button" onClick={() => followUser(profileUsername, username)}>Follow</button>
         ]}
-        {/* { !isMyProfile && loggedIn && !followingUser &&
-          <button id="follower-button" onClick={() => followUser(profileUsername, username)}>Follow</button>
-        } */}
+        
         <div id="dashboard-follower-buttons">
           <button onClick={() => setModal('follower')} id="follower-button">{numFollowers} followers</button>
           <button onClick={() => setModal('following')} id="follower-button">{numFollowing} following</button>
