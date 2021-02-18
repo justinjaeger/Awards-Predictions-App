@@ -18,7 +18,9 @@ const db = mysql({
 
 async function query(q) {
   try {
-    const results = await db.query(q)
+    console.log('trying...')
+    const results = await db.query(q) // this is the line it gets stuck on
+    console.log('ending...')
     await db.end()
     return results
   } catch (e) {
@@ -29,6 +31,7 @@ async function query(q) {
 // Create "entries" table if doesn't exist
 async function migrate() {
   try {
+    console.log('attempting migration...')
     await query(`
     CREATE TABLE IF NOT EXISTS 'users' (
       'user_id' INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -41,7 +44,7 @@ async function migrate() {
       'dateCreated' DATETIME,
       'lastLoggedIn' DATETIME
     );
-    
+
     CREATE TABLE IF NOT EXISTS 'tokens' (
       'access_token' VARCHAR(250) PRIMARY KEY NOT NULL,
       'user_id' INT NOT NULL
