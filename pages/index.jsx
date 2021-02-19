@@ -98,7 +98,7 @@ export async function getServerSideProps(context) {
         if (res.data.loggedIn) {
           props.loggedIn = true;
           props.username = res.data.username;
-          props.profileImage = res.data.profileImage;
+          // props.profileImage = res.data.profileImage;
         };  
         /* sets cookies on client (HAVE to do this for getServerSideProps) */
         parseCookies(res.data.cookieArray, context);
