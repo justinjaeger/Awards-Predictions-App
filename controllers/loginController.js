@@ -67,7 +67,7 @@ loginController.ifEmailNoExistDontSend = async (req, res) => {
   result = await db.query(`
     SELECT user_id 
     FROM users
-    WHERE email="${email}" 
+    WHERE email='${email}' 
   `);
   res.handleErrors(result);
   /* If user no exist, We should send the message anyway 
@@ -89,7 +89,7 @@ loginController.updatePassword = async (req, res) => {
   /* Update the password in db */
   result = await db.query(`
     UPDATE users
-    SET password="${hashedPassword}"
+    SET password='${hashedPassword}'
     WHERE user_id=${user_id} 
   `);
   res.handleErrors(result);

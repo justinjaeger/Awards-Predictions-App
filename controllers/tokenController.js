@@ -58,7 +58,7 @@ tokenController.createAccessToken = async (req, res) => {
   /* SAVE TOKEN IN DB */
   result = await db.query(`
     INSERT INTO tokens(access_token, user_id)
-    VALUES("${access_token}", ${user_id}) 
+    VALUES('${access_token}', ${user_id}) 
   `);
   res.handleErrors(result);
   res.handleEmptyResult(result);
@@ -90,7 +90,7 @@ tokenController.deleteAccessToken = async (req, res) => {
   /* Delete the access token in db */
   result = await db.query(`
     DELETE FROM tokens
-    WHERE access_token="${access_token}" 
+    WHERE access_token='${access_token}' 
   `);
   res.handleErrors(result);
 

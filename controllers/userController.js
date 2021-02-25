@@ -54,7 +54,7 @@ userController.getProfileImage = async (req, res) => {
 
   result = await db.query(`
     SELECT image FROM users 
-    WHERE username="${profileUsername}" 
+    WHERE username='${profileUsername}' 
   `);
   res.handleErrors(result);
 

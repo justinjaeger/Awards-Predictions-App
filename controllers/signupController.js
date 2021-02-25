@@ -88,7 +88,7 @@ signupController.createUser = async (req, res) => {
   /* Create new user in database */
   result = await db.query(`
     INSERT INTO users(email, username, password)
-    VALUES("${email}", "${username}", "${hashedPassword}") 
+    VALUES('${email}', '${username}', '${hashedPassword}') 
   `); 
   if (result.error) {
     /* Handle duplicate entry errors with an error message */
@@ -115,7 +115,7 @@ signupController.authenticateUser = async (req, res) => {
   query = `
     UPDATE users
     SET authenticated=1
-    WHERE username="${username}" `;
+    WHERE username='${username}' `;
   result = await db.query(query); 
   res.handleErrors(result);
   res.handleEmptyResult(result);
@@ -133,7 +133,7 @@ signupController.getUserIdByUsername = async (req, res) => {
   query = `
     SELECT user_id
     FROM users
-    WHERE username="${username}" `;
+    WHERE username='${username}' `;
   result = await db.query(query); 
   res.handleErrors(result);
   res.handleEmptyResult(result);
@@ -152,7 +152,7 @@ signupController.markDateCreated = async (req, res) => {
   /* get the datetime */
   const datetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-  /* update the "dateCreated" field with current datetime */
+  /* update the 'dateCreated' field with current datetime */
   query = `
     UPDATE users
     SET dateCreated = '${datetime}'
