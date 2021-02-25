@@ -32,7 +32,7 @@ loginController.returnUserData = async (req, res) => {
   result = await db.query(`
     SELECT *
     FROM users
-    WHERE ${entryType}="${emailOrUsername}" 
+    WHERE ${entryType}='${emailOrUsername}'
   `);
   res.handleErrors(result);
   res.handleEmptyResult(result, { error: `Credentials do not match` });

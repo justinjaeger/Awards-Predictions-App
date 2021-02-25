@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "APP_ENV=local next dev",
+    "devrem": "APP_ENV=remote next dev",
     "build": "next build",
     "start": "next start",
     "migrate": "node scripts/migrate-db.js",
