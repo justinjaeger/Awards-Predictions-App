@@ -15,7 +15,7 @@ followerController.getFollowers = async (req, res) => {
   /* Fetch the user's followers */
   result = await db.query(`
     SELECT follower FROM followers
-    WHERE username="${profileUsername}" 
+    WHERE username='${profileUsername}' 
   `);
   res.handleErrors(result);
 
@@ -37,7 +37,7 @@ followerController.getFollowing = async (req, res) => {
   /* Fetch who user is following - user is the follower */
   result = await db.query(`
     SELECT username FROM followers
-    WHERE follower="${follower}" 
+    WHERE follower='${follower}' 
   `);
   res.handleErrors(result);
 
@@ -62,7 +62,7 @@ followerController.followUser = async (req, res) => {
   /* Fetch who user is following */
   result = await db.query(`
     INSERT INTO followers(username, follower, dateCreated)
-    VALUES("${profileUsername}", "${follower}", "${datetime}")
+    VALUES('${profileUsername}', '${follower}', '${datetime}')
   `);
   res.handleErrors(result);
 };
@@ -78,7 +78,7 @@ followerController.unfollowUser = async (req, res) => {
   /* Fetch who user is following */
   result = await db.query(`
     DELETE FROM followers 
-    WHERE username="${profileUsername}" AND follower="${follower}"
+    WHERE username='${profileUsername}' AND follower='${follower}'
   `);
   res.handleErrors(result);
 };
@@ -93,7 +93,7 @@ followerController.getNumFollowers = async (req, res) => {
 
   /* Fetch num of followers - cur page is followee */
   result = await db.query(`
-    SELECT COUNT(*) AS sum FROM followers WHERE username="${profileUsername}"
+    SELECT COUNT(*) AS sum FROM followers WHERE username='${profileUsername}'
   `);
   res.handleErrors(result);
 
@@ -110,7 +110,7 @@ followerController.getNumFollowing = async (req, res) => {
 
   /* Fetch who user is following - user is the follower */
   result = await db.query(`
-    SELECT COUNT(*) AS sum FROM followers WHERE follower="${profileUsername}"
+    SELECT COUNT(*) AS sum FROM followers WHERE follower='${profileUsername}'
   `);
   res.handleErrors(result);
 
@@ -128,8 +128,8 @@ followerController.determineFollowing = async (req, res) => {
   /* Fetch who user is following - user is the follower */
   result = await db.query(`
     SELECT * FROM followers
-    WHERE username="${profileUsername}"
-    AND follower="${username}"
+    WHERE username='${profileUsername}'
+    AND follower='${username}'
   `);
   res.handleErrors(result);
 

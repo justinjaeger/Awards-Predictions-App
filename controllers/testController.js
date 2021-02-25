@@ -26,7 +26,7 @@ testController.hashPassword = async (password) => {
 testController.createUser = async (email, username, hashedPass) => {
   r = await db.query(`
   INSERT INTO users(email, username, password)
-  VALUES("${email}", "${username}", "${hashedPass}")
+  VALUES('${email}', '${username}', '${hashedPass}')
   `);
   if (r.error) console.log(r.error);
 };
@@ -38,7 +38,7 @@ testController.createUser = async (email, username, hashedPass) => {
  */
 testController.getUserId = async (username) => {
   r = await db.query(`
-    SELECT user_id FROM users WHERE username="${username}"
+    SELECT user_id FROM users WHERE username='${username}'
   `);
   if (r.error) console.log(r.error);
   const user_id = r[0].user_id;
@@ -54,7 +54,7 @@ testController.getAccessToken = async (user_id, username) => {
   const access_token = jwt.sign({user_id}, process.env.ACCESS_TOKEN_SECRET);
   r = await db.query(`
     INSERT INTO tokens(access_token, user_id, username)
-    VALUES("${access_token}", ${user_id}, "${username}")
+    VALUES('${access_token}', ${user_id}, '${username}')
   `);
   if (r.error) console.log(r.error);
   return access_token;
