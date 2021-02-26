@@ -1,5 +1,4 @@
 import db from 'lib/db';
-const bcrypt = require('bcrypt');
 
 const followerController = {};
 let result;
@@ -59,6 +58,7 @@ followerController.followUser = async (req, res) => {
   /* Get the current datetime */
   const datetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
+  console.log(datetime)
   /* Fetch who user is following */
   result = await db.query(`
     INSERT INTO followers(username, follower, dateCreated)
@@ -89,11 +89,11 @@ followerController.getNumFollowers = async (req, res) => {
 
   console.log('getNumFollowers')
 
-  const { profileUsername } = res.locals;
+  const { username } = res.locals;
 
   /* Fetch num of followers - cur page is followee */
   result = await db.query(`
-    SELECT COUNT(*) AS sum FROM followers WHERE username='${profileUsername}'
+    SELECT COUNT(*) AS sum FROM followers WHERE username='${username}'
   `);
   res.handleErrors(result);
 
@@ -106,11 +106,11 @@ followerController.getNumFollowing = async (req, res) => {
 
   console.log('getNumFollowing')
 
-  const { profileUsername } = res.locals;
+  const { username } = res.locals;
 
   /* Fetch who user is following - user is the follower */
   result = await db.query(`
-    SELECT COUNT(*) AS sum FROM followers WHERE follower='${profileUsername}'
+    SELECT COUNT(*) AS sum FROM followers WHERE follower='${username}'
   `);
   res.handleErrors(result);
 

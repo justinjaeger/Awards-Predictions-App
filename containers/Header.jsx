@@ -7,9 +7,11 @@ import { motion } from "framer-motion"
 
 export default function App(props) { 
 
+  const { URL } = props;
+
   const [username, setUsername] = useState(props.username);
   const [email, setEmail] = useState(props.email);
-  const [profileImage,] = useState(props.profileImage);
+  const [image,] = useState(props.image);
   const [loggedIn, setLoggedIn] = useState(props.loggedIn);
   const [loginDropdown, setLoginDropdown] = useState(props.loginDropdown);
   const [loginRoute, setLoginRoute] = useState(props.loginRoute);
@@ -89,7 +91,8 @@ export default function App(props) {
         username ={username}
         setLoginDropdown={setLoginDropdown}
         setMessage={setLoginMessage}
-        profileImage={profileImage}
+        image={image}
+        URL={URL}
       />
 
       { loginDropdown && 

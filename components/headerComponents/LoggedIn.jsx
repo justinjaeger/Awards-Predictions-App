@@ -1,28 +1,18 @@
 import React, { useEffect } from 'react';
 
 function LoggedIn(props) { 
-  const { username, logout, profileImage } = props;
+  const { username, logout, image, URL } = props;
 
-  // Determine the url based on the environment
-  const route = (() => {
-    switch(process.env.NODE_ENV) {
-      case 'development':
-        return 'localhost:3000'
-      case 'production':
-        return 'localhost:3000'
-    }
-  })();
-
-  const image = (profileImage === null) ? '/PROFILE.png' : profileImage;
+  const pimage = (image === null) ? '/PROFILE.png' : image;
   const space = <span>&nbsp;</span>;
   
   return (
     <>
       <button onClick={logout} className="header-button" >Log Out</button>
       
-      <div id="header-message">Welcome,{space}<a href={`http://${route}/${username}`} className="header-button" >{username}</a></div>
-      <a href={`http://${route}/${username}`} className="header-button">
-        <img className="profile-image-xsm header-profile-pic" src={image} ></img>
+      <div id="header-message">Welcome,{space}<a href={`http://${URL}/${username}`} className="header-button" >{username}</a></div>
+      <a href={`http://${URL}/${username}`} className="header-button">
+        <img className="profile-image-xsm header-profile-pic" src={pimage} ></img>
       </a>
     </>
   );
