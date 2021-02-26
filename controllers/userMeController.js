@@ -1,11 +1,11 @@
 import db from 'lib/db';
 
-const userController = {};
-let result, query;
+const userMeController = {};
+let result;
 
 /*************************************/
 
-userController.getUsername = async (req, res) => {
+userMeController.getUsername = async (req, res) => {
 
   console.log('getUsername')
 
@@ -24,9 +24,9 @@ userController.getUsername = async (req, res) => {
 
 /*************************************/
 
-userController.dashboard = async (req, res) => {
+userMeController.dashboard = async (req, res) => {
 
-  console.log('dashboard')
+  console.log('userMeController.dashboard')
 
   const { user_id } = res.locals;
 
@@ -38,31 +38,10 @@ userController.dashboard = async (req, res) => {
   res.handleErrors(result);
   res.handleEmptyResult(result);
 
-  console.log('result', result)
-
   res.locals.username = result[0].username;
   res.locals.profileImage = result[0].image;
 };
 
 /*************************************/
 
-userController.getProfileImage = async (req, res) => {
-
-  console.log('getProfileImage')
-
-  const { profileUsername } = res.locals;
-
-  result = await db.query(`
-    SELECT image FROM users 
-    WHERE username='${profileUsername}' 
-  `);
-  res.handleErrors(result);
-
-  console.log('result', result)
-
-  res.locals.profileImage = result[0].image;
-};
-
-/*************************************/
-
-module.exports = userController;
+module.exports = userMeController;

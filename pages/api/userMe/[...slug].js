@@ -1,18 +1,21 @@
 import wrapper from 'utils/wrapper';
 import tokenController from 'controllers/tokenController';
-import userController from 'controllers/userController';
+import userMeController from 'controllers/userMeController';
 import followerController from 'controllers/followerController';
 
 /**
- * Essentially gets called whenever we see that we have an access token.
+ * UserMe
+ *
+ * Essentially gets called whenever we see that we have an access token,
+ * aka that we are logged in.
  * Needs to verify the access token, refreshing if neccessary,
- * and return the proper data (based on slug) back to the app
+ * and return the proper data (based on url string) back to the app
  */
 
 const handler = async (req, res) => {
 
   try {
-    /* Get the action from the slug */
+    /* Get the action from the url string */
     const action = req.query.slug[0];
     res.locals.access_token = req.body.access_token;
 
@@ -30,7 +33,7 @@ const handler = async (req, res) => {
     switch (action) {
       case 'home':
         /* Fetch the username */
-        await userController.getUsername(req, res);
+        await userMeController.getUsername(req, res);
         if (res.finished) return;
 
         data.username = res.locals.username;
@@ -39,12 +42,20 @@ const handler = async (req, res) => {
 
       case 'dashboard':
         /* Fetch the username and profile image */
-        await userController.dashboard(req, res);
+        await userMeController.dashboard(req, res);
+        if (res.finished) return;
+        /* Get people following user */
+        await followerController.getNumFollowers(req, res);
+        if (res.finished) return;
+        /* Get people user is following */
+        await followerController.getNumFollowing(req, res);
         if (res.finished) return;
 
         data.username = res.locals.username;
-        data.loggedIn = true;
         data.profileImage = res.locals.profileImage;
+        data.numFollowers = res.locals.numFollowers;
+        data.numFollowing = res.locals.numFollowing;
+        data.loggedIn = true;
         break;
 
       default: 
@@ -60,7 +71,7 @@ const handler = async (req, res) => {
     return res.json(data);
   } 
   catch(e) {
-    console.log('error in ...slug', e);
+    console.log('error in /userMe/...slug', e);
     return res.status(500).send(e.message);
   };
 

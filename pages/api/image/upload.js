@@ -1,6 +1,5 @@
 import wrapper from 'utils/wrapper';
 import axios from 'axios';
-// import userController from 'controllers/userController';
 
 const key = process.env.IMGBB_API_KEY;
 const url = 'https://api.imgbb.com/1/upload';

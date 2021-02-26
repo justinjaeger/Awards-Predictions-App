@@ -4,54 +4,31 @@ import Modal from 'components/dashboardComponents/Modal'
 
 function Dashboard(props) { 
 
-  const { loggedIn, profileUsername, username, profileImage } = props;
-  const [numFollowers, setNumFollowers] = useState('');
-  const [numFollowing, setNumFollowing] = useState('');
+  const { 
+    loggedIn, 
+    profileUsername,
+    username, 
+    profileImage,
+  } = props;
+  const [numFollowers, setNumFollowers] = useState(props.numFollowers);
+  const [numFollowing, setNumFollowing] = useState(props.numFollowing);
   const [followingUser, setFollowingUser] = useState(false);
   const [modal, setModal] = useState(false);
-  const [image, setImage] = useState('/PROFILE.png');
 
   /* Determine if page is YOUR profile or someone else's */
   const isMyProfile = (username === profileUsername) ? true : false;
 
   useEffect(async () => {
-
-    /* Fetch the number of followers and following */
-    await axios.post('/api/followers/getNumFollowers', { profileUsername })
-      .then(res => {
-        setNumFollowers(res.data.numFollowers);
-        setNumFollowing(res.data.numFollowing);
-      })
-      .catch(err => {
-        if (err) console.log('something went wrong fetching followers', err);
-      })
-
-    if (loggedIn) {
-      /* Determine if we are following them */
+    /* Determine if we are following them */
+    if (loggedIn && !isMyProfile) {
       await axios.post('/api/followers/determineFollowing', { username, profileUsername })
         .then(res => {
-          setFollowingUser(res.data.followingUser)
+          setFollowingUser(res.data.followingUser);
         })
         .catch(err => {
           if (err) console.log('something went wrong fetching followers', err);
         })
     };
-
-    /* Set profile image */
-    if (isMyProfile) {
-      /* Set profile image */
-      if (profileImage !== null) setImage(profileImage);
-    } else {
-      /* Fetch the profile image from db */
-      await axios.post('/api/user/getProfileImage', { profileUsername })
-        .then(res => {
-          if (res.data.profileImage) setImage(res.data.profileImage);
-        })
-        .catch(err => {
-          if (err) console.log('something went wrong with getProfileImage', err);
-        })
-    };
-
   }, []);
 
   /* FOLLOW USER */
@@ -85,7 +62,7 @@ function Dashboard(props) {
   return (
     <div id="dashboard-content">
 
-      <img src={image} alt="" className="profile-image-lg dashboard-profile-image" />
+      <img src={profileImage} alt="" className="profile-image-lg dashboard-profile-image" />
 
       <div id="dashboard info">
         { !isMyProfile &&

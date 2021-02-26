@@ -6,6 +6,16 @@ import parseCookies from 'utils/parseCookies';
 
 export default function Home(props) { 
 
+  // Determine the url based on the environment
+  const URL = (() => {
+    switch(process.env.NODE_ENV) {
+      case 'development':
+        return 'localhost:3000'
+      case 'production':
+        return 'localhost:3000'
+    };
+  })();
+
   return (
     <>
       <Header 
