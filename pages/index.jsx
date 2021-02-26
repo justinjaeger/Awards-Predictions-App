@@ -6,6 +6,8 @@ import parseCookies from 'utils/parseCookies';
 
 export default function Home(props) { 
 
+  console.log(props.image)
+
   // Determine the url based on the environment
   const URL = (() => {
     switch(process.env.NODE_ENV) {
@@ -28,7 +30,8 @@ export default function Home(props) {
         email={props.email}
         notification={props.notification}
         notificationBox={props.notificationBox}
-        profileImage={props.profileImage}
+        image={props.image}
+        URL={URL}
       />
     </>
   );
@@ -55,7 +58,7 @@ export async function getServerSideProps(context) {
     email: '',
     notification: false,
     notificationBox: false,
-    profileImage: null,
+    image: '/PROFILE.png',
   };
 
   /* Handle cookies */
@@ -102,13 +105,13 @@ export async function getServerSideProps(context) {
      * For other prediction pages which will check the cookie, we'll put a slug there to tell it to send back more data
      * - so long as sticking with SSR, can also just do static loading skeleton w/ client side fetching
      */
-    await axios.post(`${process.env.DEV_ROUTE}/api/user/home`, payload)
+    await axios.post(`${process.env.DEV_ROUTE}/api/userMe/header`, payload)
       .then(res => {
         /* If token is verified, set props accordingly */
         if (res.data.loggedIn) {
           props.loggedIn = true;
           props.username = res.data.username;
-          // props.profileImage = res.data.profileImage;
+          if (res.data.image) props.image = res.data.image;
         };  
         /* sets cookies on client (HAVE to do this for getServerSideProps) */
         parseCookies(res.data.cookieArray, context);

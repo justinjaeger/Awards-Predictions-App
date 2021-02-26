@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import cookies from 'next-cookies';
 import parseCookies from 'utils/parseCookies';
-import { useRouter } from 'next/router';
 
 import Header from 'containers/Header';
 import Dashboard from 'containers/Dashboard';
@@ -24,6 +23,8 @@ function UserDashboard(props) {
     };
   })();
 
+  console.log('profile image, ', props.profileImage)
+
   return (
     <>
       <Header 
@@ -43,15 +44,16 @@ function UserDashboard(props) {
       { (props.send404)
       ? <Four0Four thingCannotFind={'User'} /> 
 
-      :<Dashboard 
-        loggedIn={props.loggedIn}
-        username={props.username}
-        user_id={props.user_id}
-        profileImage={props.profileImage}
-        profileUsername={props.profileUsername}
-        numFollowers={props.numFollowers}
-        numFollowing={props.numFollowing}
-      />
+      : <Dashboard 
+          loggedIn={props.loggedIn}
+          username={props.username}
+          user_id={props.user_id}
+          profileImage={props.profileImage}
+          profileUsername={props.profileUsername}
+          numFollowers={props.numFollowers}
+          numFollowing={props.numFollowing}
+          followingUser={props.followingUser}
+        />
       }
     </>
   );
@@ -87,6 +89,7 @@ export async function getServerSideProps(context) {
     profileImage: '/PROFILE.png',
     profileUsername: profileUsername,
     send404: false,
+    followingUser: false,
   };
 
   /* Handle cookies */
@@ -127,15 +130,13 @@ export async function getServerSideProps(context) {
   if (c.access_token) { // cookie exists when you are logged in
     const payload = { access_token: c.access_token };
     /* Request to verify token and get data no the user */
-    await axios.post(`${process.env.DEV_ROUTE}/api/userMe/dashboard`, payload)
+    await axios.post(`${process.env.DEV_ROUTE}/api/auth`, payload)
       .then(res => {
         /* If token is verified, set props accordingly */
         if (res.data.loggedIn) {
           props.loggedIn = true;
           props.username = res.data.username;
-          props.image = res.data.profileImage;
-          props.numFollowers = res.data.numFollowers;
-          props.numFollowing = res.data.numFollowing;
+          if (res.data.image) props.image = res.data.image;
         };  
         /* sets cookies on client (HAVE to do this inside getServerSideProps) */
         parseCookies(res.data.cookieArray, context);
@@ -145,20 +146,32 @@ export async function getServerSideProps(context) {
       })
   };
 
-  /* Now I must fetch the data for the user whose profile we're visiting */
-  let isMyProfile = false;
-  await axios.post(`${process.env.DEV_ROUTE}/api/userOther/dashboard`, { profileUsername })
+  /* Fetch the data for the user whose profile we're visiting */
+  await axios.post(`${process.env.DEV_ROUTE}/api/user/dashboard`, { profileUsername })
     .then(res => {
-      /* If it returns X, it is not my profile. Throw 404 */
+      /* If not a real profile, throw 404 */
       if (res.data.send404) return props.send404 = true;
+      console.log('image', res.data.image)
       /* If token is verified, set props accordingly */
-      props.profileImage = res.data.profileImage;
+      if (res.data.profileImage) props.profileImage = res.data.profileImage;
       props.numFollowers = res.data.numFollowers;
       props.numFollowing = res.data.numFollowing;
     })
     .catch(err => {
       console.log('something went wrong while verifying access token', err);
     })
+
+  /* If this is not our profile, determine if we are following them */
+  let username = props.username;
+  if (username !== profileUsername) {
+    await axios.post(`${process.env.DEV_ROUTE}/api/followers/determineFollowing`, { username, profileUsername })
+      .then(res => {
+        props.followingUser = res.data.followingUser;
+      })
+      .catch(err => {
+        if (err) console.log('something went wrong fetching followers', err);
+      })
+  };
 
   /* Return the final props object */
   return { props };

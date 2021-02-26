@@ -12,24 +12,13 @@ function Dashboard(props) {
   } = props;
   const [numFollowers, setNumFollowers] = useState(props.numFollowers);
   const [numFollowing, setNumFollowing] = useState(props.numFollowing);
-  const [followingUser, setFollowingUser] = useState(false);
+  const [followingUser, setFollowingUser] = useState(props.followingUser);
   const [modal, setModal] = useState(false);
+
+  console.log(followingUser)
 
   /* Determine if page is YOUR profile or someone else's */
   const isMyProfile = (username === profileUsername) ? true : false;
-
-  useEffect(async () => {
-    /* Determine if we are following them */
-    if (loggedIn && !isMyProfile) {
-      await axios.post('/api/followers/determineFollowing', { username, profileUsername })
-        .then(res => {
-          setFollowingUser(res.data.followingUser);
-        })
-        .catch(err => {
-          if (err) console.log('something went wrong fetching followers', err);
-        })
-    };
-  }, []);
 
   /* FOLLOW USER */
   function followUser(profileUsername, username) {

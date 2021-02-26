@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import HeaderContent from 'containers/HeaderContent';
 import LoginContainer from 'containers/LoginContainer';
 import Notification from 'components/Notification';
-import { motion } from "framer-motion"
 
 export default function App(props) { 
 
   const { URL } = props;
 
+  // User info
   const [username, setUsername] = useState(props.username);
   const [email, setEmail] = useState(props.email);
   const [image,] = useState(props.image);
+  // Profile Dropdown
+  const [profileDropdown, setProfileDropdown] = useState(false);
+  // Login Container
   const [loggedIn, setLoggedIn] = useState(props.loggedIn);
   const [loginDropdown, setLoginDropdown] = useState(props.loginDropdown);
   const [loginRoute, setLoginRoute] = useState(props.loginRoute);
@@ -69,6 +71,16 @@ export default function App(props) {
     setLoginDropdown(true);
   };
 
+  function toggleLoginDropdown(route) {
+    // Displays login dropdown and sets route
+    setLoginDropdown(true);
+    setLoginRoute(route);
+    setLoginMessage('');
+    setLoginError('');
+  };
+
+  const space = <span>&nbsp;</span>;
+
   return (
     <div id="App">
 
@@ -84,16 +96,33 @@ export default function App(props) {
         />
       }
 
-      <HeaderContent
-        loggedIn={loggedIn}
-        logout={logout}
-        setRoute={redirect} 
-        username ={username}
-        setLoginDropdown={setLoginDropdown}
-        setMessage={setLoginMessage}
-        image={image}
-        URL={URL}
-      />
+      <div id="Header">
+        {!loggedIn &&
+          <>
+            <button onClick={() => toggleLoginDropdown('/login')} className="header-button" >Log In</button>
+            <button onClick={() => toggleLoginDropdown('/signup')} className="header-button">Sign Up</button>
+          </>
+        }
+
+        {loggedIn &&
+          <>
+            <div id="header-message">Welcome,{space}<a href={`http://${URL}/${username}`} className="header-button" >{username}</a></div>
+            <button 
+              onMouseEnter={() => setProfileDropdown(!profileDropdown)} 
+              onClick={() => setProfileDropdown(true)} 
+              className="header-button">
+              <img className="profile-image-xsm header-profile-pic" src={image} ></img>
+            </button>
+      
+            { profileDropdown && 
+              <div id="profile-dropdown" onMouseLeave={() => setProfileDropdown(false)}>
+                <a className="profile-dropdown-button no-underline" href={`http://${URL}/${username}`} >My Profile</a>
+                <button className="profile-dropdown-button" onClick={logout} >Log Out</button>
+              </div>
+            }
+          </>
+        }
+      </div>
 
       { loginDropdown && 
         <LoginContainer

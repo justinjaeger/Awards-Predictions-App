@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 import db from 'lib/db';
 
 const tokenController = {};
-let result, query;
+let result;
 const tokenExpireTime = '10m';
 
 /*************************************/

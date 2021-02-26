@@ -4,7 +4,7 @@ const usernameFilter = require('utils/usernameFilter');
 const bcrypt = require('bcrypt');
 
 const signupController = {};
-let result, query;
+let result;
 
 /*************************************/
 
@@ -112,11 +112,11 @@ signupController.authenticateUser = async (req, res) => {
   const { username } = res.locals;
 
   /* Set authentication status to true (0 -> 1) */
-  query = `
+  result = await db.query(`
     UPDATE users
     SET authenticated=1
-    WHERE username='${username}' `;
-  result = await db.query(query); 
+    WHERE username='${username}' 
+  `); 
   res.handleErrors(result);
   res.handleEmptyResult(result);
 };
@@ -130,11 +130,11 @@ signupController.getUserIdByUsername = async (req, res) => {
   const { username } = res.locals;
 
   /* get the user_id from the username */
-  query = `
+  result = await db.query(`
     SELECT user_id
     FROM users
-    WHERE username='${username}' `;
-  result = await db.query(query); 
+    WHERE username='${username}' 
+  `); 
   res.handleErrors(result);
   res.handleEmptyResult(result);
 
@@ -153,11 +153,11 @@ signupController.markDateCreated = async (req, res) => {
   const datetime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   /* update the 'dateCreated' field with current datetime */
-  query = `
+  result = await db.query(`
     UPDATE users
     SET dateCreated = '${datetime}'
-    WHERE username = '${username}' `;
-  result = await db.query(query); 
+    WHERE username = '${username}' 
+  `); 
   res.handleErrors(result);
   res.handleEmptyResult(result);
 };
@@ -171,10 +171,10 @@ signupController.deleteUser = async (req, res) => {
   const { email } = res.locals;
 
   /* delete the user from database */
-  query = `
+  result = await db.query(`
     DELETE FROM users
-    WHERE email = '${email}' `;
-  result = await db.query(query); 
+    WHERE email = '${email}' 
+  `); 
   res.handleErrors(result);
   res.handleEmptyResult(result, { error: 'did not delete user'});
 };

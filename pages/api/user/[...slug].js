@@ -1,9 +1,9 @@
 import wrapper from 'utils/wrapper';
-import userOtherController from 'controllers/userOtherController';
+import userController from 'controllers/userController';
 import followerController from 'controllers/followerController';
 
 /**
- * UserOther
+ * user
  * 
  * Essentially gets called whenever we are trying to get a user's information
  * on a specific page.
@@ -22,7 +22,7 @@ const handler = async (req, res) => {
 
     /* Check that a user with this name exists...
       if not, throw a 404 page */
-    await userOtherController.checkUserExists(req, res);
+    await userController.checkUserExists(req, res);
     if (res.finished) return;
     if (res.locals.send404) return res.json({ send404: true });
 
@@ -33,7 +33,7 @@ const handler = async (req, res) => {
     switch (action) {
       case 'dashboard':
         /* Fetch profile image */
-        await userOtherController.getProfileImage(req, res);
+        await userController.getProfileImage(req, res);
         if (res.finished) return;
         /* Get people following user */
         await followerController.getNumFollowers(req, res);
@@ -46,15 +46,12 @@ const handler = async (req, res) => {
         data.numFollowers = res.locals.numFollowers;
         data.numFollowing = res.locals.numFollowing;
         break;
-
-      default: 
     };
 
-    res.sendCookies(); // just for postman but otherwise ineffective
     return res.json(data);
   } 
   catch(e) {
-    console.log('error in /userOther/...slug', e);
+    console.log('error in /user/...slug', e);
     return res.status(500).send(e.message);
   };
 

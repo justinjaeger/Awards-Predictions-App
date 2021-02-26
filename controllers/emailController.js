@@ -2,7 +2,7 @@ const { encrypt } = require('utils/encrypt');
 const mailHelper = require('utils/mailHelper');
 
 const emailController = {};
-let result, query;
+let result;
 
 /*************************************/
 

@@ -11,15 +11,23 @@ followerController.getFollowers = async (req, res) => {
 
   const { profileUsername } = res.locals;
 
-  /* Fetch the user's followers */
+  /* Fetch the user's followers - names and images */
   result = await db.query(`
-    SELECT follower FROM followers
-    WHERE username='${profileUsername}' 
+    SELECT username, image 
+    FROM users
+    WHERE username = (
+      SELECT follower FROM followers
+      WHERE username='${profileUsername}' 
+    );
   `);
   res.handleErrors(result);
 
   const followers = result.map(user => {
-    return { username: user.follower }
+    const image = (user.image) ? user.image : '/PROFILE.png'
+    return { 
+      username: user.username,
+      image: image,
+    };
   });
 
   res.locals.followers = followers;
@@ -35,13 +43,21 @@ followerController.getFollowing = async (req, res) => {
 
   /* Fetch who user is following - user is the follower */
   result = await db.query(`
-    SELECT username FROM followers
-    WHERE follower='${follower}' 
+    SELECT username, image 
+    FROM users
+    WHERE username = (
+      SELECT username FROM followers
+      WHERE follower='${follower}'
+    );
   `);
   res.handleErrors(result);
 
   const following = result.map(user => {
-    return { username: user.username }
+    const image = (user.image) ? user.image : '/PROFILE.png'
+    return { 
+      username: user.username,
+      image: image,
+    };
   });
 
   res.locals.following = following;

@@ -41,7 +41,31 @@
 
 .header-button {
   @include headerContent();
+  margin-right: 20px;
   &:hover {
     color: $secondary;
+  }
+}
+
+#profile-dropdown {
+  position: absolute;
+  top: 50px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top: 0;
+  border-radius: 0px 0px 8px 8px;
+  background-color: $off-black;
+}
+
+.profile-dropdown-button {
+  padding: 10px;
+  display: flex;
+  color: $off-white;
+  align-items: flex-start;
+  font-size: 16px;
+  font-family: $oswald;
+  width: 200px;
+  &:hover {
+    background-color: $secondary;
   }
 }
