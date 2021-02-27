@@ -158,7 +158,7 @@ export async function getServerSideProps(context) {
       props.numFollowing = res.data.numFollowing;
     })
     .catch(err => {
-      console.log('something went wrong while verifying access token', err);
+      console.log('something went wrong fetching data for user dashboard', err);
     })
 
   /* If this is not our profile, determine if we are following them */
