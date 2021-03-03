@@ -3,6 +3,7 @@ import axios from 'axios';
 import FollowerList from 'components/dashboardComponents/FollowerList';
 import DragAndDrop from 'components/wrappers/DragAndDrop';
 import Modal from 'components/wrappers/Modal';
+import FileDrop from 'components/wrappers/FileDrop';
 
 function Dashboard(props) { 
 
@@ -16,6 +17,7 @@ function Dashboard(props) {
   const [numFollowing, setNumFollowing] = useState(props.numFollowing);
   const [followingUser, setFollowingUser] = useState(props.followingUser);
   const [modal, setModal] = useState(false);
+  const [file, setFile] = useState("");
 
   console.log(followingUser)
 
@@ -53,13 +55,97 @@ function Dashboard(props) {
     alert('fuck')
   };
 
+  async function handleProfileImageUpload(e) {
+    const file = e.target.files[0];
+
+    console.log('file',file)
+
+    await fetch('/api/image/profileUpload', { 
+      method: 'PUT',
+      body: { file },
+      'Content-Type': 'image/jpg',
+    })
+    .then(res => res.json())
+    .then(res => {
+      const url = res.location;
+      console.log('final:', url);
+
+      
+      const urlToFile = (url, filename) => {
+        return fetch(url, {
+          mode: 'no-cors'
+        })
+          .then((res) => {
+            return res.arrayBuffer();
+          })
+          .then((buf) => {
+            return new File([buf], filename);
+          });
+      };
+
+      urlToFile(url, 'image-upload')
+        .then(data => console.log('data',data))
+        .then(data => {
+          // const newurl = URL.createObjectURL(data);
+          setFile(data)
+        })    
+
+      // })
+
+      // .then(res => res.json())
+      // .then(res => {
+      //   console.log('res',res.data)
+      // })
+      // .then(res => {
+      //   // See if I can convert the result into a URL and such
+      //   console.log('resULT', res)
+      //   const url = res.Location;
+      //   const urlToFile = (url, filename) => {
+      //     return fetch(url)
+      //       .then((res) => {
+      //         return res.arrayBuffer();
+      //       })
+      //       .then((buf) => {
+      //         return new File([buf], filename);
+      //       });
+      //   };
+      //   urlToFile(url, 'asdfasdf')
+      //     .then(data => console.log('data',data))
+      //     .then(data => {
+      //       const newurl = URL.createObjectURL(data);
+      //       console.log('newurl', newurl)
+      //       setFile(newurl)
+      //     })
+      // .catch(err => {
+      //   console.log('err uploading profile image', err.response);
+      // })
+    })
+  };
+  
+
   /* Load the skeleton until the data has been fetched */
   return (
     <div id="dashboard-content">
 
-      <DragAndDrop handleDrop={handleDrop}>
+      {/* <DragAndDrop handleDrop={handleDrop}>
         <img src={profileImage} alt="" className="profile-image-lg dashboard-profile-image" />
-      </DragAndDrop>
+      </DragAndDrop> */}
+{/* 
+      <p>Filename: {file.name}</p>
+      <p>File type: {file.type}</p>
+      <p>File size: {file.size} bytes</p> */}
+      {file && <img src={URL.createObjectURL(file)} />}
+
+      {/* <img src={file} /> */}
+      file: {file}
+
+      <label htmlFor="file-upload">
+          <div>
+            <img src={profileImage} className="profile-image-lg dashboard-profile-image"/>
+            <div id="dashboard-image-hover" >Upload Image</div>
+          </div>
+      </label>
+      <input id="file-upload" type="file" onChange={handleProfileImageUpload}/>
 
       <div id="dashboard info">
         { !isMyProfile &&
