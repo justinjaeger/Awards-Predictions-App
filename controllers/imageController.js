@@ -8,25 +8,19 @@ imageController.uploadProfileImage = async (req, res) => {
 
   let { file } = res.locals;
   file = JSON.stringify(file);
-
-  // console.log('file', file)
-
-  // AWS.config.update({
-  //   region: 'nyc3',
-  //   accessKeyId: process.env.SPACES_KEY,
-  //   secretAccessKey: process.env.SPACES_SECRET,
-  // });
   
   const s3 = new AWS.S3({
     endpoint: new AWS.Endpoint('nyc3.digitaloceanspaces.com'),
     accessKeyId: process.env.SPACES_KEY,
     secretAccessKey: process.env.SPACES_SECRET,
+    region: 'nyc3',
   });
 
   const uploadParams = {
     Bucket: 'oscarexpert',
-    Key: 'image-upload',
+    Key: 'image-upload', // file path
     Body: file,
+    ContentType: "image/jpeg",
     ACL: "public-read",
   };
 

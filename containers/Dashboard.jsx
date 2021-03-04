@@ -3,7 +3,6 @@ import axios from 'axios';
 import FollowerList from 'components/dashboardComponents/FollowerList';
 import DragAndDrop from 'components/wrappers/DragAndDrop';
 import Modal from 'components/wrappers/Modal';
-import FileDrop from 'components/wrappers/FileDrop';
 
 function Dashboard(props) { 
 
@@ -51,93 +50,30 @@ function Dashboard(props) {
       })
   };
 
-  function handleDrop(f) {
-    alert('fuck')
-  };
-
   async function handleProfileImageUpload(e) {
     const file = e.target.files[0];
+    const filename = encodeURIComponent(file.name);
 
-    console.log('file',file)
+    const url = `/api/image/upload-url?file=${filename}`;
+    const formData = new FormData();
+    formData.append(filename, file);
+    console.log('formdata', formData)
 
-    await fetch('/api/image/profileUpload', { 
-      method: 'PUT',
-      body: { file },
-      'Content-Type': 'image/jpg',
+    await fetch(url, {
+      method: 'POST',
+      body: formData,
+      // 'Content-Type': 'image/jpg',
     })
-    .then(res => res.json())
-    .then(res => {
-      const url = res.location;
-      console.log('final:', url);
-
-      
-      const urlToFile = (url, filename) => {
-        return fetch(url, {
-          mode: 'no-cors'
-        })
-          .then((res) => {
-            return res.arrayBuffer();
-          })
-          .then((buf) => {
-            return new File([buf], filename);
-          });
-      };
-
-      urlToFile(url, 'image-upload')
-        .then(data => console.log('data',data))
-        .then(data => {
-          // const newurl = URL.createObjectURL(data);
-          setFile(data)
-        })    
-
-      // })
-
-      // .then(res => res.json())
-      // .then(res => {
-      //   console.log('res',res.data)
-      // })
-      // .then(res => {
-      //   // See if I can convert the result into a URL and such
-      //   console.log('resULT', res)
-      //   const url = res.Location;
-      //   const urlToFile = (url, filename) => {
-      //     return fetch(url)
-      //       .then((res) => {
-      //         return res.arrayBuffer();
-      //       })
-      //       .then((buf) => {
-      //         return new File([buf], filename);
-      //       });
-      //   };
-      //   urlToFile(url, 'asdfasdf')
-      //     .then(data => console.log('data',data))
-      //     .then(data => {
-      //       const newurl = URL.createObjectURL(data);
-      //       console.log('newurl', newurl)
-      //       setFile(newurl)
-      //     })
-      // .catch(err => {
-      //   console.log('err uploading profile image', err.response);
-      // })
-    })
+      .then(res => res.json())
+      .then(res => {
+        console.log('final:', res);
+      })
   };
   
 
   /* Load the skeleton until the data has been fetched */
   return (
     <div id="dashboard-content">
-
-      {/* <DragAndDrop handleDrop={handleDrop}>
-        <img src={profileImage} alt="" className="profile-image-lg dashboard-profile-image" />
-      </DragAndDrop> */}
-{/* 
-      <p>Filename: {file.name}</p>
-      <p>File type: {file.type}</p>
-      <p>File size: {file.size} bytes</p> */}
-      {file && <img src={URL.createObjectURL(file)} />}
-
-      {/* <img src={file} /> */}
-      file: {file}
 
       <label htmlFor="file-upload">
           <div>
