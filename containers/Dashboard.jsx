@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Modal from 'components/dashboardComponents/Modal'
+import FollowerList from 'components/dashboardComponents/FollowerList';
+import DragAndDrop from 'components/wrappers/DragAndDrop';
+import Modal from 'components/wrappers/Modal';
 
 function Dashboard(props) { 
 
@@ -47,11 +49,32 @@ function Dashboard(props) {
       })
   };
 
+  async function handleProfileImageUpload(e) {
+    const file = e.target.files[0];
+
+    console.log('file',file)
+
+    await fetch(`/api/image/profileUpload`, {
+      method: 'POST',
+      body: file,
+      'Content-Type': 'image/jpg',
+    })
+      .then(res => {
+        console.log('final:', res);
+      })
+  };
+
   /* Load the skeleton until the data has been fetched */
   return (
     <div id="dashboard-content">
 
-      <img src={profileImage} alt="" className="profile-image-lg dashboard-profile-image" />
+      <label htmlFor="file-upload">
+          <div>
+            <img src={profileImage} className="profile-image-lg dashboard-profile-image"/>
+            <div id="dashboard-image-hover" >Upload Image</div>
+          </div>
+      </label>
+      <input id="file-upload" type="file" onChange={handleProfileImageUpload}/>
 
       <div id="dashboard info">
         { !isMyProfile &&
@@ -74,13 +97,16 @@ function Dashboard(props) {
           <button onClick={() => setModal('following')} id="follower-button">{numFollowing} following</button>
         </div>
       </div>
-      
-      { modal && 
-        <Modal 
-          title={modal} 
-          setModal={setModal}
-          profileUsername={profileUsername}
-        />
+    
+      { modal &&
+        <Modal setModal={setModal} >
+          {modal === 'follower' && <div id="follower-title">Followers:</div>}
+          {modal === 'following' && <div id="follower-title">Following:</div>}
+          <FollowerList 
+            title={modal}
+            profileUsername={profileUsername}
+          />
+        </Modal>
       }
 
     </div>

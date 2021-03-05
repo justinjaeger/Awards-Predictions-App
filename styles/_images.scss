@@ -4,6 +4,19 @@ $xsm: 30px;
 $sm: 50px;
 $lg: 200px;
 
+@mixin overlay($bgColor: #000, $bgOpacity: 0.6){
+	&:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba($bgColor, $bgOpacity);
+    z-index: 0;
+	}
+}
+
 @mixin circle() {
   border-radius: 50%;
   object-fit: cover;
@@ -25,6 +38,25 @@ $lg: 200px;
   height: $lg;
 }
 
-.movie-thumbnail {
+.dashboard-profile-image {
+  margin: 10px;
+  &:hover {
+    @include overlay();
+    cursor: pointer;
+    opacity: 0.8
+  }
+}
 
+#dashboard-image-hover {
+  position: relative;
+  top: -60px;
+  right: -60px;
+  font-family: $oswald;
+  font-size: 20px;
+  z-index: -1;
+  opacity: 1;
+  color: black;
+  &:hover {
+    z-index: 1;
+  }
 }

@@ -47,22 +47,19 @@ function FollowerList(props) {
     };
   }, [])
 
-  /* Create array of follower components */
-  const list = [];
-  for (let i=0; i<array.length; i++) {
-    list.push(
-      <FollowerUnit 
-        username={array[i].username} 
-        image={array[i].image}
-        key={`${title}${i}`}
-      />
-    )
-  };
-
   return (
     <>
       {skeleton && <div id="follower-list"></div>}
-      {!skeleton && <div id="follower-list">{list}</div>}
+      {!skeleton && <div id="follower-list">
+        {array.map((el, i) => 
+          <FollowerUnit 
+            username={el.username} 
+            image={el.image}
+            key={`${title}${i}`}
+          />
+        )}
+      </div>
+      }
     </>
   );
 }
