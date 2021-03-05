@@ -16,7 +16,6 @@ function Dashboard(props) {
   const [numFollowing, setNumFollowing] = useState(props.numFollowing);
   const [followingUser, setFollowingUser] = useState(props.followingUser);
   const [modal, setModal] = useState(false);
-  const [file, setFile] = useState("");
 
   console.log(followingUser)
 
@@ -52,24 +51,18 @@ function Dashboard(props) {
 
   async function handleProfileImageUpload(e) {
     const file = e.target.files[0];
-    const filename = encodeURIComponent(file.name);
 
-    const url = `/api/image/upload-url?file=${filename}`;
-    const formData = new FormData();
-    formData.append(filename, file);
-    console.log('formdata', formData)
+    console.log('file',file)
 
-    await fetch(url, {
+    await fetch(`/api/image/profileUpload`, {
       method: 'POST',
-      body: formData,
-      // 'Content-Type': 'image/jpg',
+      body: file,
+      'Content-Type': 'image/jpg',
     })
-      .then(res => res.json())
       .then(res => {
         console.log('final:', res);
       })
   };
-  
 
   /* Load the skeleton until the data has been fetched */
   return (
