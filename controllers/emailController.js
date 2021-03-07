@@ -13,10 +13,9 @@ emailController.sendVerificationEmail = (req, res) => {
   const { email, username } = res.locals;
 
   /* Create the URL that takes the user to reset password page */
-  const DEV_ROUTE = process.env.DEV_ROUTE;
   const encryptedUsername = encrypt(username); // encrypts username so we can safetly use it in url
   const encodedUsername = encodeURIComponent(encryptedUsername); // encodes it because encryption will put weird characters in that will otherwise mess up the route
-  const url = `${DEV_ROUTE}/api/signup/verifyEmail/?username=${encodedUsername}`;
+  const url = `http://localhost:3000/api/signup/verifyEmail/?username=${encodedUsername}`;
 
   /* utilizes the helper function */
   const { transport, emailVerificationOptions } = mailHelper(email, url, username);

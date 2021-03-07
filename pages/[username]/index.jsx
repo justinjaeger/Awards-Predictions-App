@@ -13,16 +13,6 @@ import Four0Four from 'containers/Four0Four';
 
 function UserDashboard(props) { 
 
-  // Determine the url based on the environment
-  const URL = (() => {
-    switch(process.env.NODE_ENV) {
-      case 'development':
-        return 'localhost:3000'
-      case 'production':
-        return 'localhost:3000'
-    };
-  })();
-
   console.log('profile image, ', props.profileImage)
 
   return (
@@ -36,9 +26,8 @@ function UserDashboard(props) {
         username={props.username}
         email={props.email}
         notification={props.notification}
-        notificationBox={props.notificationBox}
         image={props.image}
-        URL={URL}
+        URL={props.URL}
       />
 
       { (props.send404)
@@ -70,6 +59,16 @@ export default UserDashboard;
 
 export async function getServerSideProps(context) {
 
+  // Determine the url based on the environment
+  const URL = (() => {
+    switch(process.env.NODE_ENV) {
+      case 'development':
+        return 'http://localhost:3000'
+      case 'production':
+        return 'https://oscarexpert.com'
+    };
+  })();
+
   /* Get the profile username from the slug */
   const profileUsername = context.req.url.slice(1);
 
@@ -85,11 +84,11 @@ export async function getServerSideProps(context) {
     image: '/PROFILE.png',
     user_id: false,
     notification: false,
-    notificationBox: false,
     profileImage: '/PROFILE.png',
     profileUsername: profileUsername,
     send404: false,
     followingUser: false,
+    URL: URL,
   };
 
   /* Handle cookies */
@@ -102,7 +101,6 @@ export async function getServerSideProps(context) {
     props.email = email;
     props.username = username;
     props.notification = 'please verify email';
-    props.notificationBox = true;
   };
 
   if (c.authenticated) { // cookie exists after you authenticate email
@@ -130,7 +128,7 @@ export async function getServerSideProps(context) {
   if (c.access_token) { // cookie exists when you are logged in
     const payload = { access_token: c.access_token };
     /* Request to verify token and get data no the user */
-    await axios.post(`${process.env.DEV_ROUTE}/api/auth`, payload)
+    await axios.post(`${URL}/api/auth`, payload)
       .then(res => {
         /* If token is verified, set props accordingly */
         if (res.data.loggedIn) {
@@ -147,11 +145,11 @@ export async function getServerSideProps(context) {
   };
 
   /* Fetch the data for the user whose profile we're visiting */
-  await axios.post(`${process.env.DEV_ROUTE}/api/user/dashboard`, { profileUsername })
+  await axios.post(`${URL}/api/user/dashboard`, { profileUsername })
     .then(res => {
+      console.log('here')
       /* If not a real profile, throw 404 */
       if (res.data.send404) return props.send404 = true;
-      console.log('image', res.data.image)
       /* If token is verified, set props accordingly */
       if (res.data.profileImage) props.profileImage = res.data.profileImage;
       props.numFollowers = res.data.numFollowers;
@@ -164,7 +162,7 @@ export async function getServerSideProps(context) {
   /* If this is not our profile, determine if we are following them */
   let username = props.username;
   if (username !== profileUsername) {
-    await axios.post(`${process.env.DEV_ROUTE}/api/followers/determineFollowing`, { username, profileUsername })
+    await axios.post(`${URL}/api/followers/determineFollowing`, { username, profileUsername })
       .then(res => {
         props.followingUser = res.data.followingUser;
       })

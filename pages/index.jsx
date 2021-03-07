@@ -3,10 +3,9 @@ import axios from 'axios';
 import cookies from 'next-cookies';
 import Header from 'containers/Header';
 import parseCookies from 'utils/parseCookies';
+import Notification from 'components/Notification';
 
 export default function Home(props) { 
-
-  console.log(props.image)
 
   // Determine the url based on the environment
   const URL = (() => {
@@ -29,7 +28,6 @@ export default function Home(props) {
         username={props.username}
         email={props.email}
         notification={props.notification}
-        notificationBox={props.notificationBox}
         image={props.image}
         URL={URL}
       />
@@ -57,7 +55,6 @@ export async function getServerSideProps(context) {
     username: '',
     email: '',
     notification: false,
-    notificationBox: false,
     image: '/PROFILE.png',
   };
 
@@ -71,7 +68,6 @@ export async function getServerSideProps(context) {
     props.email = email;
     props.username = username;
     props.notification = 'please verify email';
-    props.notificationBox = true;
   };
 
   if (c.authenticated) { // cookie exists after you authenticate email

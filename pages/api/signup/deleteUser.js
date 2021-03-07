@@ -8,7 +8,7 @@ import signupController from 'controllers/signupController';
 const handler = async (req, res) => {
 
   try {
-    res.locals.email = req.body;
+    res.locals.email = req.body.email;
   
     /* Delete User */
     await signupController.deleteUser(req, res);
@@ -16,6 +16,7 @@ const handler = async (req, res) => {
     
     /* Set verification cookie in browser */
     // LATER MAKE THIS LOCAL STORAGE
+    console.log('about to delete cookie')
     res.cookie('sent_verification');
 
     res.sendCookies();

@@ -159,7 +159,7 @@ signupController.markDateCreated = async (req, res) => {
     WHERE username = '${username}' 
   `); 
   res.handleErrors(result);
-  res.handleEmptyResult(result);
+  res.handleEmptyResult(result, 'could not mark date created');
 };
 
 /*************************************/
@@ -169,14 +169,16 @@ signupController.deleteUser = async (req, res) => {
   console.log('deleteUser')
 
   const { email } = res.locals;
+  console.log('email', email)
 
   /* delete the user from database */
   result = await db.query(`
     DELETE FROM users
-    WHERE email = '${email}' 
+    WHERE email='${email}' 
   `); 
+  console.log('result', result)
   res.handleErrors(result);
-  res.handleEmptyResult(result, { error: 'did not delete user'});
+  res.handleEmptyResult(result, 'did not delete user');
 };
 
 /*************************************/

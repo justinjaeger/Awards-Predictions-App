@@ -14,15 +14,15 @@ const LoginContainer = (props) => {
     route, setRoute, 
     username, setUsername,
     email, setEmail,
-    message, setMessage,
-    error, setError,
+    message, setLoginMessage,
+    error, setErrorMessage,
     resendEmailLink, setResendEmailLink,
     reEnterEmailLink, setReEnterEmailLink,
     changeEmailLink, setChangeEmailLink,
     xOut,
     login,
     setLoginDropdown,
-    setNotification, setNotificationBox
+    setNotification
   } = props;
 
   // RESEND VERIFICATION EMAIL
@@ -30,9 +30,9 @@ const LoginContainer = (props) => {
     const payload = { email, username };
     axios.post('/api/signup/resendVerification', payload)
     .then(res => {
-      if (res.data.error) return setError(res.data.error);
+      if (res.data.error) return setErrorMessage(res.data.error);
       setRoute('/blank');
-      setMessage(res.data.message);
+      setLoginMessage(res.data.message);
       setResendEmailLink(false);
       // setReEnterEmailLink(true);
     })
@@ -68,8 +68,8 @@ const LoginContainer = (props) => {
           setRoute={setRoute}
           username={username}
           login={login}
-          setMessage={setMessage}
-          setError={setError}
+          setLoginMessage={setLoginMessage}
+          setErrorMessage={setErrorMessage}
           setResendEmailLink={setResendEmailLink}
           setReEnterEmailLink={setReEnterEmailLink}
         />
@@ -81,21 +81,20 @@ const LoginContainer = (props) => {
           actualSetEmail={setEmail}
           actualSetUsername={setUsername}
           setRoute={setRoute}
-          setMessage={setMessage}
-          setError={setError}
+          setLoginMessage={setLoginMessage}
+          setErrorMessage={setErrorMessage}
           setResendEmailLink={setResendEmailLink}
           setReEnterEmailLink={setReEnterEmailLink}
           setLoginDropdown={setLoginDropdown}
           setNotification={setNotification}
-          setNotificationBox={setNotificationBox}
         />
       }
 
       { (route === '/forgotPassword') &&
         <ForgotPassword 
           setRoute={setRoute}
-          setMessage={setMessage}
-          setError={setError}
+          setLoginMessage={setLoginMessage}
+          setErrorMessage={setErrorMessage}
           setReEnterEmailLink={setReEnterEmailLink}
         />
       }
@@ -104,8 +103,8 @@ const LoginContainer = (props) => {
         <ResetPassword 
           email={email}
           setRoute={setRoute}
-          setMessage={setMessage}
-          setError={setError}
+          setLoginMessage={setLoginMessage}
+          setErrorMessage={setErrorMessage}
           login={login}
         />
       }
