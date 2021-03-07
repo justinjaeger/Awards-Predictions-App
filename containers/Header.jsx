@@ -21,7 +21,6 @@ export default function App(props) {
   const [loginError, setLoginError] = useState(props.loginError);
   // Notification
   const [notification, setNotification] = useState(props.notification);
-  const [notificationBox, setNotificationBox] = useState(props.notificationBox);
   // Login Links
   const [resendEmailLink, setResendEmailLink] = useState(false);
   const [reEnterEmailLink, setReEnterEmailLink] = useState(false);
@@ -43,7 +42,7 @@ export default function App(props) {
   function logout() {
     axios.get('/api/login/logout')
     .then(res => {
-      if (res.data.error) return setError(res.data.error);
+      if (res.data.error) return setErrorMessage(res.data.error);
       setLoggedIn(false);
       setUsername('');
       window.location.reload();
@@ -79,21 +78,43 @@ export default function App(props) {
     setLoginError('');
   };
 
+  // When you click "Incorrect Email?"
+  function deleteUserAndSignUpAgain() {
+    // Delete the user by email
+    axios.post('/api/signup/deleteUser', { email })
+    .then(res => {
+      if (res.data.error) return setLoginError(res.data.error);
+      redirect('/signup');
+      setUsername(username);
+      setNotification(false);
+      setLoginMessage(res.data.message);
+      setLoginDropdown(true);
+    })
+    .catch(err => {
+      // gtting an error here
+      console.log('err in notification.jsx', err.response);
+    })
+  };
+
+  // If specific notification, render this notification:
+  if (notification === 'please verify email') setNotification([
+    <div>Please verify the email sent to: {email}. </div>,
+    <button 
+        id="notif-click-here"
+        onClick={deleteUserAndSignUpAgain}
+        > Incorrect Email?
+    </button>
+  ]);
+
   const space = <span>&nbsp;</span>;
 
   return (
     <div id="App">
 
-      { notificationBox &&
-        <Notification 
-          setRoute={redirect}
-          email={email}
-          username={username} setUsername={setUsername}
-          setLoginDropdown={setLoginDropdown}
-          setMessage={setLoginMessage}
-          notification={notification} setNotification={setNotification}
-          notificationBox={notificationBox} setNotificationBox={setNotificationBox}
-        />
+      {notification && 
+      <Notification setNotification={setNotification} >
+        {notification}
+      </Notification> 
       }
 
       <div id="Header">
@@ -130,14 +151,13 @@ export default function App(props) {
           route={loginRoute} setRoute={redirect}
           username={username} setUsername={setUsername}
           email={email} setEmail={setEmail}
-          message={loginMessage} setMessage={setLoginMessage}
-          error={loginError} setError={setLoginError}
+          message={loginMessage} setLoginMessage={setLoginMessage}
+          error={loginError} setErrorMessage={setLoginError}
           resendEmailLink={resendEmailLink} setResendEmailLink={setResendEmailLink}
           reEnterEmailLink={reEnterEmailLink} setReEnterEmailLink={setReEnterEmailLink}
           changeEmailLink={changeEmailLink} setChangeEmailLink={setChangeEmailLink}
           setLoginDropdown={setLoginDropdown}
           notification={notification} setNotification={setNotification}
-          setNotificationBox={setNotificationBox}
           xOut={xOut}
           login={login}
         />

@@ -26,7 +26,7 @@ userController.getUsername = async (req, res) => {
 
 userController.header = async (req, res) => {
 
-  console.log('header')
+  console.log('userController.header')
 
   const { user_id } = res.locals;
 
@@ -62,6 +62,24 @@ userController.getProfileImage = async (req, res) => {
     : '/PROFILE.png'
 
   res.locals.profileImage = finalImage;
+};
+
+/*************************************/
+
+userController.saveProfileImage = async (req, res) => {
+
+  console.log('saveProfileImage')
+
+  const { username, url } = res.locals;
+  console.log('username', username, 'url', url)
+
+  result = await db.query(`
+    UPDATE users
+    SET image='${url}'
+    WHERE username='${username}' 
+  `);
+  res.handleErrors(result);
+  res.handleEmptyResult(result, 'could not upload profile picture to database');
 };
 
 /*************************************/

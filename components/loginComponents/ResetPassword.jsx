@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function ResetPassword(props) {
 
-  const { setMessage, setError, email, login } = props;
+  const { setLoginMessage, setErrorMessage, email, login } = props;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -19,7 +19,7 @@ function ResetPassword(props) {
     };
     axios.post('/api/login/resetPassword', payload)
       .then(res => {
-        if (res.data.error) return setError(res.data.error);
+        if (res.data.error) return setErrorMessage(res.data.error);
         login(res.data); // log user in & send user data
       })
       .catch(err => {
