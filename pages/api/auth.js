@@ -36,7 +36,7 @@ const handler = async (req, res) => {
     });
   } 
   catch(e) {
-    console.log('error in /userMe/...slug', e);
+    console.log('error in /auth', e);
     return res.status(500).send(e.message);
   };
 
